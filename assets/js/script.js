@@ -7,16 +7,20 @@
 
 const input = document.querySelector('#cpf-input');
 const form = document.querySelector('form');
+
 form.addEventListener('submit', e => {
     e.preventDefault();
 });
 
 (function cpfValidation() {
 
+    // SHOW CPF VALIDATION RESULT //
+    const heroSection = document.querySelector('.hero-section');
+    const validationResultContainer = document.querySelector('.validation-result');
+    const validationResultBtn = document.querySelector('.validation-result__btn');
+
     const showValidationMsg = isValid => {
-        const validationResultContainer = document.querySelector('.validation-result');
         const validationResultMsg = document.querySelector('.validation-result__msg');
-        const heroSection = document.querySelector('.hero-section');
 
         heroSection.classList.toggle('blur');
 
@@ -28,34 +32,26 @@ form.addEventListener('submit', e => {
     }
 
     const hideValidationMsg = () => {
-        const heroSection = document.querySelector('.hero-section');
-        const validationResult = document.querySelector('.validation-result');
-
         heroSection.classList.remove('blur');
-        validationResult.classList.remove('valid');
-        validationResult.classList.remove('invalid');
+        validationResultContainer.classList.remove('valid');
+        validationResultContainer.classList.remove('invalid');
     }
-    const validationResultBtn = document.querySelector('.validation-result__btn');
+
     validationResultBtn.addEventListener('click', hideValidationMsg);
 
-    /*get cpf without "." and "-"*/
+
+    // CPF VALIDATION //
     const formatCpf = cpf => {
-        let formattedCpf = cpf.replace(/\D+/g, '');
-        return formattedCpf;
+        return cpf.replace(/\D+/g, ''); /*get cpf without "." and "-"*/
     }
 
-    /*root = first nine digits*/
     const getCpfRoot = cpf => {
-        return cpf.slice(0, -2);
+        return cpf.slice(0, -2); /*root = first nine digits*/
     }
 
-    /*function to get the counter that's gonna be used to get the sum of all root digits - it'll be used to get a check digit*/
-    const getRegressiveCounter = cpf => {
-        if (cpf.length > 9) return 11; /*if the first checkDigit is already on the cpf passed as argument*/
-        return 10;
-    }
+    const getCpfSum = (cpf) => {
+        let regressiveCounter = cpf.length + 1;
 
-    const getCpfSum = (cpf, regressiveCounter) => {
         return Array.from(cpf).reduce((acc, digit) => {
             digit = Number(digit);
             acc += regressiveCounter * digit;
@@ -65,15 +61,18 @@ form.addEventListener('submit', e => {
     }
 
     const getCheckDigit = cpf => {
-        const regressiveCounter = getRegressiveCounter(cpf); /*it isn't being used anywhere!*/
-        const cpfSum = getCpfSum(cpf, regressiveCounter);
+        const cpfSum = getCpfSum(cpf);
         const checkDigit = 11 - cpfSum % 11;
+
         if (checkDigit > 9) return 0;
         return checkDigit;
     }
 
-    const getCpfToCompare = (cpfRoot, ...checkDigits) => {
-        const [checkD1, checkD2] = checkDigits;
+    const getCpfToCompare = (cpf) => {
+        const cpfRoot = getCpfRoot(cpf);
+        const checkD1 = getCheckDigit(cpfRoot);
+        const checkD2 = getCheckDigit(cpfRoot + checkD1);
+
         return cpfRoot + checkD1 + checkD2;
     }
 
@@ -83,20 +82,15 @@ form.addEventListener('submit', e => {
 
     const checkCpf = cpfReceived => {
         cpfReceived = formatCpf(cpfReceived);
+        const cpfToCompare = getCpfToCompare(cpfReceived);
 
         if (isSequence(cpfReceived)) return showValidationMsg(false);
-
-        const cpfRoot = getCpfRoot(cpfReceived);
-        const checkD1 = getCheckDigit(cpfRoot);
-        const checkD2 = getCheckDigit(cpfRoot + checkD1);
-        const cpfToCompare = getCpfToCompare(cpfRoot, checkD1, checkD2);
-
         showValidationMsg(cpfReceived === cpfToCompare);
     }
 
     document.addEventListener('keyup', e => {
         if (e.key === 'Enter') checkCpf(input.value);
-    })
+    });
 })();
 
 (function cpfInput() {
@@ -124,10 +118,6 @@ form.addEventListener('submit', e => {
         }
     }
 
-    input.addEventListener('input', e => {
-        checkInput();
-    })
-    input.addEventListener('keydown', e => {
-        cpfMask();
-    })
+    input.addEventListener('input', checkInput);
+    input.addEventListener('keydown', cpfMask);
 })();
