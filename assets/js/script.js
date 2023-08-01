@@ -6,8 +6,37 @@
 /*remember: there's no hoisting in arrow functions.*/
 
 const input = document.querySelector('#cpf-input');
+const form = document.querySelector('form');
+form.addEventListener('submit', e => {
+    e.preventDefault();
+});
 
 (function cpfValidation() {
+
+    const showValidationMsg = isValid => {
+        const validationResultContainer = document.querySelector('.validation-result');
+        const validationResultMsg = document.querySelector('.validation-result__msg');
+        const heroSection = document.querySelector('.hero-section');
+
+        heroSection.classList.toggle('blur');
+
+        validationResultMsg.innerText = isValid ? 'CPF válido' : 'CPF inválido';
+        if (!isValid) {
+            return validationResultContainer.classList.toggle('invalid'); /*return to stop the function's execution - gives the same result as writing on the next line*/
+        }
+        validationResultContainer.classList.toggle('valid');
+    }
+
+    const hideValidationMsg = () => {
+        const heroSection = document.querySelector('.hero-section');
+        const validationResult = document.querySelector('.validation-result');
+
+        heroSection.classList.remove('blur');
+        validationResult.classList.remove('valid');
+        validationResult.classList.remove('invalid');
+    }
+    const validationResultBtn = document.querySelector('.validation-result__btn');
+    validationResultBtn.addEventListener('click', hideValidationMsg);
 
     /*get cpf without "." and "-"*/
     const formatCpf = cpf => {
@@ -55,21 +84,15 @@ const input = document.querySelector('#cpf-input');
     const checkCpf = cpfReceived => {
         cpfReceived = formatCpf(cpfReceived);
 
-        if (isSequence(cpfReceived)) return alert('CPF inválido!');
+        if (isSequence(cpfReceived)) return showValidationMsg(false);
 
         const cpfRoot = getCpfRoot(cpfReceived);
         const checkD1 = getCheckDigit(cpfRoot);
         const checkD2 = getCheckDigit(cpfRoot + checkD1);
         const cpfToCompare = getCpfToCompare(cpfRoot, checkD1, checkD2);
 
-        if (!(cpfReceived === cpfToCompare)) return alert('CPF inválido!');
-        alert('CPF válido!');
+        showValidationMsg(cpfReceived === cpfToCompare);
     }
-
-    const form = document.querySelector('form');
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-    })
 
     document.addEventListener('keyup', e => {
         if (e.key === 'Enter') checkCpf(input.value);
