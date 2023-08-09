@@ -21,12 +21,21 @@
         <div class="hero__inner">
             <div class="hero__logo-container container">
                 <div class="logo-wrapper">
-                    <img class="logo-img" src="../img/valida-cpf-logo.svg" alt="logo do site">
+                    <img class="logo-img" src="../img/logo.svg" alt="logo do site">
                 </div>
             </div>
             <div class="hero__form-container container">
                 <form class="form" method="get">
-                    <input id="cpf-input" type="text" name="cpf-input" placeholder="Insira o CPF">
+                    <fieldset>
+                        <div class="input-field">
+                            <input id="gen-cpf-input" type="text" name="cpf-input" readonly>
+                            <button class="cpf-btn gen-cpf-btn" type="button">Gerar</button>
+                        </div>
+                        <div class="input-field">
+                            <input id="check-cpf-input" type="text" name="cpf-input" placeholder="Insira o CPF">
+                            <button class="cpf-btn check-cpf-btn" type="button">Checar</button>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
         </div>

@@ -25,7 +25,28 @@
     gap: 5rem;
 }
 
-#cpf-input {
+fieldset {
+    display: flex;
+    flex-flow: column nowrap;
+    border: none;
+    gap: 2rem;
+}
+
+.input-field {
+    display: flex;
+}
+
+button {
+    background: gold;
+}
+
+.cpf-btn {
+    flex: 1 1 10rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+input {
     font-size: 2rem;
     min-height: 4rem;
     padding-left: 0.5rem;
@@ -48,6 +69,11 @@
     display: block;
     width: 100%;
     height: 100%;
+}
+
+input:focus {
+    outline: 2px solid gold;
+    box-shadow: 0rem 0rem 2rem rgba(255, 217, 0, 0.5);
 }
 
 .validation-result {
@@ -87,16 +113,16 @@
 
 .blur {
     filter: blur(.5rem);
+    pointer-events: none;
 }
 
 .validation-result__btn {
     padding: 0.5rem 4rem;
     transition: .1s ease-in-out;
-    background: gold;
     font-size: 2rem;
 }
 
-.validation-result__btn:hover {
+button:hover {
     background: rgb(255, 200, 0);
 }
 
