@@ -40,19 +40,14 @@ form.addEventListener('submit', e => {
 
 
     // CPF VALIDATION //
-    const formatCpf = cpf => {
-        return cpf.replace(/\D+/g, ''); /*get cpf without "." and "-"*/
-    }
+    const formatCpf = cpf => cpf.replace(/\D+/g, ''); /*get cpf without "." and "-"*/
 
-    const getCpfRoot = cpf => {
-        return cpf.slice(0, -2); /*root = first nine digits*/
-    }
+    const getCpfRoot = cpf => cpf.slice(0, -2); /*root = first nine digits*/
 
     const getCpfSum = (cpf) => {
         let regressiveCounter = cpf.length + 1;
 
         return Array.from(cpf).reduce((acc, digit) => {
-            digit = Number(digit);
             acc += regressiveCounter * digit;
             regressiveCounter--;
             return acc;
@@ -61,10 +56,9 @@ form.addEventListener('submit', e => {
 
     const getCheckDigit = cpf => {
         const cpfSum = getCpfSum(cpf);
-        const checkDigit = 11 - cpfSum % 11;
+        const digit = 11 - cpfSum % 11;
 
-        if (checkDigit > 9) return 0;
-        return checkDigit;
+        return digit > 9 ? 0 : digit;
     }
 
     const getCpfToCompare = (cpf) => {
@@ -75,9 +69,7 @@ form.addEventListener('submit', e => {
         return cpfRoot + checkD1 + checkD2;
     }
 
-    const isSequence = cpf => {
-        return cpf === cpf[0].repeat(11);
-    }
+    const isSequence = cpf => cpf === cpf[0].repeat(11);
 
     const checkCpf = cpfReceived => {
         cpfReceived = formatCpf(cpfReceived);
@@ -104,18 +96,11 @@ form.addEventListener('submit', e => {
             .replace(/(-\d{2})\d+?$/, '$1');
     }
 
-    const removeLastChar = () => {
-        input.value = input.value.slice(0, -1);
-    }
+    const removeLastChar = () => input.value = input.value.slice(0, -1);
 
     const checkInput = () => {
-        if (!input.value.slice(-1).match(/\d+/g)) { /*if the last character is not a digit, immediately remove it from the input*/
-            removeLastChar();
-        }
-
-        if (input.value.length > 14) { /*if the last digit makes the cpfInput.value greater than 14 (11 digits + 4 specialChars), immediately remove it from the input*/
-            removeLastChar();
-        }
+        if (!input.value.slice(-1).match(/\d+/g)) removeLastChar(); /*if the last character is not a digit, immediately remove it from the input*/
+        if (input.value.length > 14) removeLastChar(); /*if the last digit makes the cpfInput.value greater than 14 (11 digits + 4 specialChars), immediately remove it from the input*/
     }
 
     input.addEventListener('input', checkInput);
