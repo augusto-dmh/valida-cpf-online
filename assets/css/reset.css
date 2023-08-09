@@ -20,4 +20,12 @@ body, ::placeholder, input {
 input {
     width: 100%;
     height: 100%;
+    border: none;
+}
+
+button {
+    background: none;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
 }

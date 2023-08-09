@@ -15,7 +15,7 @@
 }
 
 .hero__inner {
-    padding: 4rem; 
+    padding: 6rem 4rem; 
     border-top: 0.25rem solid gold;
     border-bottom: 0.25rem solid gold;
     display: flex;
@@ -34,6 +34,7 @@ fieldset {
 
 .input-field {
     display: flex;
+    border: 1px solid lightgray;
 }
 
 button {
