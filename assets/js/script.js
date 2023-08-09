@@ -15,29 +15,28 @@ form.addEventListener('submit', e => {
 (function cpfValidation() {
 
     // SHOW CPF VALIDATION RESULT //
-    const heroSection = document.querySelector('.hero-section');
-    const validationResultContainer = document.querySelector('.validation-result');
-    const validationResultBtn = document.querySelector('.validation-result__btn');
+    const containsAnyClass = (element, classList) => classList.some(className => element.classList.contains(className));
 
-    const showValidationMsg = isValid => {
+    const toggleValidationMsg = isValid => {
+        const heroSection = document.querySelector('.hero-section');
+        const validationResultContainer = document.querySelector('.validation-result');
         const validationResultMsg = document.querySelector('.validation-result__msg');
 
-        heroSection.classList.toggle('blur');
-
-        validationResultMsg.innerText = isValid ? 'CPF válido' : 'CPF inválido';
-        if (!isValid) {
-            return validationResultContainer.classList.toggle('invalid'); /*return to stop the function's execution - gives the same result as writing on the next line*/
+        if (containsAnyClass(validationResultContainer, ['valid', 'invalid'])) { /*if the container is already shown, then hide it*/
+            heroSection.classList.remove('blur');
+            validationResultContainer.classList.remove('valid');
+            validationResultContainer.classList.remove('invalid');
+            return;
         }
+
+        heroSection.classList.toggle('blur');
+        validationResultMsg.innerText = isValid ? 'CPF válido' : 'CPF inválido';
+        if (!isValid) return validationResultContainer.classList.toggle('invalid'); /*return to stop the function's execution - gives the same result as writing on the next line*/
         validationResultContainer.classList.toggle('valid');
     }
 
-    const hideValidationMsg = () => {
-        heroSection.classList.remove('blur');
-        validationResultContainer.classList.remove('valid');
-        validationResultContainer.classList.remove('invalid');
-    }
-
-    validationResultBtn.addEventListener('click', hideValidationMsg);
+    const validationResultBtn = document.querySelector('.validation-result__btn');
+    validationResultBtn.addEventListener('click', toggleValidationMsg); /*hide validation msg whenever the button is clicked*/
 
 
     // CPF VALIDATION //
@@ -84,8 +83,9 @@ form.addEventListener('submit', e => {
         cpfReceived = formatCpf(cpfReceived);
         const cpfToCompare = getCpfToCompare(cpfReceived);
 
-        if (isSequence(cpfReceived)) return showValidationMsg(false);
-        showValidationMsg(cpfReceived === cpfToCompare);
+        if (isSequence(cpfReceived)) return toggleValidationMsg(false);
+
+        toggleValidationMsg(cpfReceived === cpfToCompare);
     }
 
     document.addEventListener('keyup', e => {
