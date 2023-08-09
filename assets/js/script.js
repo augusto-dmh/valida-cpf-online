@@ -40,6 +40,8 @@ form.addEventListener('submit', e => {
 
 
     // CPF VALIDATION //
+    const checkBtn = document.querySelector('.check-cpf-btn');
+
     const getCleanCpf = cpf => cpf.replace(/\D+/g, ''); /*get cpf without "." and "-"*/
 
     const getCpfRoot = cpf => cpf.slice(0, -2); /*root = first nine digits*/
@@ -82,6 +84,10 @@ form.addEventListener('submit', e => {
 
     document.addEventListener('keyup', e => {
         if (e.key === 'Enter') checkCpf(inputCheck.value);
+    });
+
+    checkBtn.addEventListener('click', () => {
+        checkCpf(inputCheck.value);
     });
 
 
